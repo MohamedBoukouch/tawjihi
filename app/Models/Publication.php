@@ -2,25 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Publication extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-        'localisation', 
+        'localisation',
         'type',
-        'date',
-        'titel', 
-        'description', 
+        'titel',
+        'description',
         'link',
+        'link_titel',
+        'file',
         'numberlike',
-        'numbercomment', 
-        'link_titel', 
-        'file'
+        'numbercomment',
+        'date',
     ];
 
-    // Assuming 'file' attribute is casted as an array
     protected $casts = [
         'file' => 'array',
     ];
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'publication_id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'publication_id');
+    }
 }
