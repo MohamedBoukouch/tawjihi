@@ -79,17 +79,35 @@ class CommentController extends Controller
         $request->validate([
             'id_publication' => 'required|integer|exists:publications,id',
         ]);
-
+    
         $comments = Comment::with('user:id,firstname,lastname,profile')
                             ->where('id_publication', $request->id_publication)
                             ->whereRaw('LENGTH(text) > 0')
                             ->orderBy('id', 'DESC')
                             ->get();
-
+    
         if ($comments->isEmpty()) {
             return response()->json(['status' => 'error', 'message' => 'No comments found'], 404);
         } else {
-            return response()->json(['status' => 'success', 'data' => $comments]);
+            // Transform the comments data to include user details directly within each comment object
+            $formattedComments = $comments->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'id_user' => $comment->id_user,
+                    'text' => $comment->text,
+                    'id_publication' => $comment->id_publication,
+                    'number_comment' => $comment->number_comment,
+                    'created_at' => $comment->created_at,
+                    'updated_at' => $comment->updated_at,
+                    'id' => $comment->user->id,
+                    'firstname' => $comment->user->firstname,
+                    'lastname' => $comment->user->lastname,
+                    'profile' => $comment->user->profile,
+                ];
+            });
+    
+            return response()->json(['status' => 'success', 'data' => $formattedComments]);
         }
     }
+    
 }

@@ -30,13 +30,13 @@ Route::post('/signup', [AuthentificationController::class, 'signup']);
 Route::post('/verifyEmail', [AuthentificationController::class, 'verifyEmail']);
 
 //COMPET
-Route::delete('/delete-compte', [CompteController::class, 'deleteCompte']);
-Route::post('/edit-compte', [CompteController::class, 'editCompte']);
-Route::post('/edit-password', [CompteController::class, 'editPassword']);
+Route::delete('/compte/delete-compte', [CompteController::class, 'deleteCompte']);
+Route::post('/compte/edit-compte', [CompteController::class, 'editCompte']);
+Route::post('/compte/edit-password', [CompteController::class, 'editPassword']);
 
 //PROFILE
-Route::post('/add-profile-image', [ProfileController::class, 'addProfileImage']);
-Route::get('/fetch-profile', [ProfileController::class, 'fetchProfile']);
+Route::post('/profile/add-profile-image', [ProfileController::class, 'addProfileImage']);
+Route::post('/profile/fetch-profile', [ProfileController::class, 'fetchProfile']);
 
 //RESETPASSWORD
 Route::post('/check-email', [ResetPasswordController::class, 'checkEmail']);
@@ -45,28 +45,28 @@ Route::post('/verify-compte', [ResetPasswordController::class, 'verifyCompte']);
 
 //PUBLICATION
 Route::post('/publications/addpublications', [PublicationController::class, 'add']);
-Route::get('/publications/getPublications', [PublicationController::class, 'getPublications']);
+Route::post('/publications/getPublications', [PublicationController::class, 'getPublications']);
 Route::get('/publications/search', [PublicationController::class, 'search']);
 
 
 //COMMENT
 Route::post('/comments/add', [CommentController::class, 'addComment']);
-Route::delete('/comments/delete', [CommentController::class, 'deleteComment']);
-Route::put('/publications/update-number-of-comments', [CommentController::class, 'updateNumberOfComments']);
-Route::get('/publications/show-comments', [CommentController::class, 'showComments']);
+Route::post('/comments/delete', [CommentController::class, 'deleteComment']);
+Route::post('/publications/update-number-of-comments', [CommentController::class, 'updateNumberOfComments']);
+Route::post('/publications/show-comments', [CommentController::class, 'showComments']);
 
 //LIKE
 Route::post('/likes/add', [LikeController::class, 'addLike']);
-Route::delete('/likes/drop', [LikeController::class, 'dropLike']);
-Route::put('/publications/update-number-of-likes', [LikeController::class, 'updateNumberOfLikes']);
+Route::post('/likes/drop', [LikeController::class, 'dropLike']);
+Route::post('/publications/update-number-of-likes', [LikeController::class, 'updateNumberOfLikes']);
 
 //FAVORITE
 Route::post('/favorites/add', [FavoriteController::class, 'addFavorite']);
-Route::delete('/favorites/delete', [FavoriteController::class, 'deleteFavorite']);
-Route::get('/favorites/select', [FavoriteController::class, 'selectFavorite']);
+Route::post('/favorites/delete', [FavoriteController::class, 'deleteFavorite']);
+Route::post('/favorites/select', [FavoriteController::class, 'selectFavorite']);
 
 //SLIDERS
 Route::post('/sliders/add', [SliderController::class, 'addSlider']);
 Route::delete('/sliders/delete', [SliderController::class, 'deleteSlider']);
-Route::get('/sliders', [SliderController::class, 'fetchSliders']);
+Route::post('/sliders', [SliderController::class, 'fetchSliders']);
 Route::put('/sliders/update', [SliderController::class, 'updateSlider']);

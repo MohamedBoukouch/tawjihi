@@ -47,21 +47,23 @@ class FavoriteController extends Controller
         $request->validate([
             'user_id' => 'required|exists:users,id',
         ]);
-
+    
+        // Retrieve favorites with publications and additional information
         $favorites = Favorite::where('user_id', $request->user_id)
                              ->with('publication')
                              ->get()
                              ->map(function ($favorite) {
                                  $publication = $favorite->publication;
-                                 $publication->favorite = 1;
-                                 $publication->liked = $publication->likes()->where('user_id', $favorite->user_id)->exists();
+                                 $publication->favorite = true; // Mark as favorite
+                                 $publication->liked = $publication->likes()->where('user_id', $favorite->user_id)->exists(); // Check if liked by current user
                                  return $publication;
                              });
-
+    
+        // Check if any favorites were found
         if ($favorites->isNotEmpty()) {
             return response()->json(['status' => 'success', 'data' => $favorites]);
         } else {
-            return response()->json(['status' => 'error']);
+            return response()->json(['status' => 'error', 'message' => 'No favorite publications found.']);
         }
     }
 }

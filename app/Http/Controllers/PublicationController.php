@@ -10,43 +10,44 @@ use Illuminate\Support\Facades\DB;
 
 class PublicationController extends Controller
 {
-    public function Add(Request $request)
-    {
-        $request->validate([
-            'localisation' => 'required|string',
-            'type' => 'required|string',
-            'titel' => 'required|string',
-            'description' => 'required|string',
-            'link' => 'nullable|string',
-            'link_titel' => 'nullable|string',
-            'file.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Example validation for images
-        ]);
 
-        $publication = Publication::create([
-            'localisation' => $request->localisation,
-            'type' => $request->type,
-            'date'=>now(),
-            'titel' => $request->titel,
-            'description' => $request->description,
-            'link' => $request->link,
-            'link_titel' => $request->link_titel,
-            'file' => [], // Initialize as an empty array
-        ]);
+public function Add(Request $request)
+{
+    $request->validate([
+        'localisation' => 'required|string',
+        'type' => 'required|string',
+        'titel' => 'required|string',
+        'description' => 'required|string',
+        'link' => 'nullable|string',
+        'link_titel' => 'nullable|string',
+        'file.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Validation for images
+    ]);
 
-        
-        // Handle file upload and store file names in the 'file' attribute
-        if ($request->hasFile('file')) {
-            $files = [];
-            foreach ($request->file('file') as $file) {
-                $filename = $file->store();
-                $files[] = $filename;
-            }
-            $publication->file = $files;
-            $publication->save();
+    $publication = new Publication();
+    $publication->localisation = $request->localisation;
+    $publication->type = $request->type;
+    $publication->date = now(); // Assuming you want to set the current date/time
+    $publication->titel = $request->titel;
+    $publication->description = $request->description;
+    $publication->link = $request->link;
+    $publication->link_titel = $request->link_titel;
+
+    // Handle file upload and move files to the desired directory
+    if ($request->hasFile('file')) {
+        $files = [];
+        foreach ($request->file('file') as $file) {
+            $filename = rand() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('/images/publication'), $filename); // Move file to custom directory
+            $files[] = $filename;
         }
-
-        return response()->json(['status' => 'success', 'data' => $publication]);
+        $publication->file = $files;
     }
+
+    $publication->save();
+
+    return response()->json(['status' => 'success', 'data' => $publication]);
+}
+
 
 //GETPUBLICATION
 public function getPublications(Request $request)
