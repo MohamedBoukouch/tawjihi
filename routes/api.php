@@ -11,11 +11,10 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SliderController;
-
-
-
-
-
+use App\Http\Controllers\EcoleController;
+use App\Http\Controllers\EcolevilleController;
+use App\Http\Controllers\PdfConcoursController;
+use App\Http\Controllers\NotificationController;
 
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -70,3 +69,22 @@ Route::post('/sliders/add', [SliderController::class, 'addSlider']);
 Route::delete('/sliders/delete', [SliderController::class, 'deleteSlider']);
 Route::post('/sliders', [SliderController::class, 'fetchSliders']);
 Route::put('/sliders/update', [SliderController::class, 'updateSlider']);
+
+//ECOLE
+Route::post('/ecoles/add', [EcoleController::class, 'addEcole']);
+Route::post('/ecoles/select', [EcoleController::class, 'showEcoleByType']);
+
+//ECOLE VILLE
+Route::post('/ecolevilles/add', [EcolevilleController::class, 'addEcoleville']);
+Route::post('/ecolevilles/select', [EcolevilleController::class, 'getEcolevillesByTypeAndEcole']);
+
+//CONCOURS
+Route::post('/pdfconcours/add', [PdfConcoursController::class, 'addConcours']);
+Route::post('/pdfconcours/select', [PdfConcoursController::class, 'getConcoursByTypeAndEcole']);
+
+//NOTIFICATION
+Route::get('/notifications/select', [NotificationController::class, 'selectNotifications']);
+Route::post('/notifications/delete', [NotificationController::class, 'deletNotification']);
+Route::get('/notifications/check_is_active', [NotificationController::class, 'checkActiveNotifications']);
+Route::post('/notifications/update-status', [NotificationController::class, 'updateStatus']);
+
