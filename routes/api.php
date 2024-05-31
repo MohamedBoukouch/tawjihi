@@ -15,6 +15,10 @@ use App\Http\Controllers\EcoleController;
 use App\Http\Controllers\EcolevilleController;
 use App\Http\Controllers\PdfConcoursController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChatController;
+
+
+
 
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
@@ -29,7 +33,7 @@ Route::post('/signup', [AuthentificationController::class, 'signup']);
 Route::post('/verifyEmail', [AuthentificationController::class, 'verifyEmail']);
 
 //COMPET
-Route::delete('/compte/delete-compte', [CompteController::class, 'deleteCompte']);
+Route::post('/compte/delete-compte', [CompteController::class, 'deleteCompte']);
 Route::post('/compte/edit-compte', [CompteController::class, 'editCompte']);
 Route::post('/compte/edit-password', [CompteController::class, 'editPassword']);
 
@@ -38,14 +42,14 @@ Route::post('/profile/add-profile-image', [ProfileController::class, 'addProfile
 Route::post('/profile/fetch-profile', [ProfileController::class, 'fetchProfile']);
 
 //RESETPASSWORD
-Route::post('/check-email', [ResetPasswordController::class, 'checkEmail']);
-Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);
-Route::post('/verify-compte', [ResetPasswordController::class, 'verifyCompte']);
+Route::post('/reset_password/check-email', [ResetPasswordController::class, 'checkEmail']);
+Route::post('/reset-password/reset', [ResetPasswordController::class, 'resetPassword']);
+Route::post('/reset_password/verify-compte', [ResetPasswordController::class, 'verifyCompte']);
 
 //PUBLICATION
 Route::post('/publications/addpublications', [PublicationController::class, 'add']);
 Route::post('/publications/getPublications', [PublicationController::class, 'getPublications']);
-Route::get('/publications/search', [PublicationController::class, 'search']);
+Route::post('/publications/search', [PublicationController::class, 'search']);
 
 
 //COMMENT
@@ -88,3 +92,10 @@ Route::post('/notifications/delete', [NotificationController::class, 'deletNotif
 Route::get('/notifications/check_is_active', [NotificationController::class, 'checkActiveNotifications']);
 Route::post('/notifications/update-status', [NotificationController::class, 'updateStatus']);
 
+// Route to send a message
+
+// Route::post('/chat', [ChatController::class, 'sendMessage']);
+// Route::delete('/chat/{id}', [ChatController::class, 'deleteMessage']);
+// Route::get('/chat/active', [ChatController::class, 'activeMessages']);
+// Route::get('/chat/{id_user}', [ChatController::class, 'selectMessages']);
+// Route::put('/chat/{id_user}', [ChatController::class, 'updateMessages']);

@@ -12,7 +12,7 @@ class CompteController extends Controller
     public function deleteCompte(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer|exists:users,id',
+            'id' => 'required',
         ]);
 
         $user_id = $request->input('id');
@@ -21,6 +21,7 @@ class CompteController extends Controller
 
         if ($user) {
             $user->delete();
+
             return response()->json(['status' => 'success']);
         } else {
             return response()->json(['status' => 'error'], 500);

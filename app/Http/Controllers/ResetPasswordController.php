@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator; // Correct import
+
 
 class ResetPasswordController extends Controller
 {
@@ -17,7 +19,7 @@ class ResetPasswordController extends Controller
         ]);
 
         $email = $request->input('email');
-        $verifycode = rand(1000, 99999);
+        $verifycode = rand(9999, 99999);
 
         $user = User::where('email', $email)->first();
 
@@ -38,23 +40,37 @@ class ResetPasswordController extends Controller
     // Method to reset password
     public function resetPassword(Request $request)
     {
-        $request->validate([
+        
+
+        // Validate the request
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:6'
         ]);
+        // $request->validate([
+        //     'email' => 'required|email|exists:users,email',
+        //     'password' => 'required|string|min:6|confirmed'
+        // ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 400);
+        }
 
         $email = $request->input('email');
-        $password = Hash::make($request->input('password'));
+        $password = $request->input('password');
 
+        // Find the user by email
         $user = User::where('email', $email)->first();
 
         if ($user) {
-            $user->password = $password;
+            // Update the user's password
+            $user->password = Hash::make($password);
             $user->save();
+
 
             return response()->json(['status' => 'success', 'data' => $user]);
         } else {
-            return response()->json(['status' => 'error', 'message' => 'User not found'], 500);
+            return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
         }
     }
 
