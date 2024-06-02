@@ -25,12 +25,17 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('contact', 
+  ['as' => 'contact', 'uses' => 'AboutController@create']);
+
 Route::get('/test', [AuthentificationController::class, 'test']);
 
 //AUTH
 Route::post('/login', [AuthentificationController::class, 'login']);
 Route::post('/signup', [AuthentificationController::class, 'signup']);
 Route::post('/verifyEmail', [AuthentificationController::class, 'verifyEmail']);
+Route::post('/store', [AuthentificationController::class, 'store']);
+Route::post('/mohamed', [AuthentificationController::class, 'mohamed']);
 
 //COMPET
 Route::post('/compte/delete-compte', [CompteController::class, 'deleteCompte']);

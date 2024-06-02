@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+// use Illuminate\Support\Facades\Mail;
 use App\Models\User;
+use Mail;
+use App\Mail\MailNotify;
 
 class AuthentificationController extends Controller
 {
-
     public function test()
     {
         return "hello";
@@ -18,20 +19,31 @@ class AuthentificationController extends Controller
     // Login method
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        // $request->validate([
+        //     'email' => 'required|email',
+        //     'password' => 'required'
+        // ]);
 
-        $email = $request->input('email');
-        $password = $request->input('password');
+        // $email = $request->input('email');
+        // $password = $request->input('password');
 
-        $user = User::where('email', $email)->first();
+        // $user = User::where('email', $email)->first();
 
-        if ($user && Hash::check($password, $user->password)) {
-            return response()->json(['status' => 'success', 'data' => $user]);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Invalid credentials'], 401);
+        // if ($user && Hash::check($password, $user->password)) {
+        //     return response()->json(['status' => 'success', 'data' => $user]);
+        // } else {
+        //     return response()->json(['status' => 'error', 'message' => 'Invalid credentials'], 401);
+        // }
+        $data = [
+            'subject' => 'cambo',
+            'body' => 'Hello'
+        ];
+        
+        try {
+            Mail::to('boukouchmohamed7@gmail.com')->send(new MailNotify($data));
+            return response()->json(['check ur email']);
+        } catch (Exception $e) {
+            return response()->json(['Sorry']);
         }
     }
 
@@ -47,7 +59,6 @@ class AuthentificationController extends Controller
 
         $firstname = $request->input('firstname');
         $lastname = $request->input('lastname');
-        $profile = $request->input('profile');
         $email = $request->input('email');
         $password = Hash::make($request->input('password'));
         $verifycode = rand(9999, 99999);
@@ -107,6 +118,18 @@ class AuthentificationController extends Controller
         }
     }
 
+    // Method to send "Hello" email to the user
+    public function sendHelloEmail($email)
+    {
+        $subject = "Hello from Our Application";
+        $message = "Hello";
+
+        if ($this->sendEmail($email, $subject, $message) == "Success") {
+            return response()->json(['status' => 'success', 'message' => 'Hello email sent successfully']);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Failed to send Hello email'], 500);
+        }
+    }
 
     public function editCompte(Request $request)
     {
@@ -136,5 +159,17 @@ class AuthentificationController extends Controller
         }
     }
 
+    public function mohamed(){
+        $data=[
+            'subject'=>'cambo',
+            'body'=>'Hello'
+        ];
+        try{
+            Mail::to('boukouchmohamed07@gmail.com')->send(new MailNotify($data));
+            return response()->json(['check ur email']);
+        }catch(Exception $e){
+            return response()->json(['Sorry']);
+        }
+    }
     
 }
