@@ -34,8 +34,7 @@ Route::get('/test', [AuthentificationController::class, 'test']);
 Route::post('/login', [AuthentificationController::class, 'login']);
 Route::post('/signup', [AuthentificationController::class, 'signup']);
 Route::post('/verifyEmail', [AuthentificationController::class, 'verifyEmail']);
-Route::post('/store', [AuthentificationController::class, 'store']);
-Route::post('/mohamed', [AuthentificationController::class, 'mohamed']);
+Route::post('/send_email', [AuthentificationController::class, 'sendEmail']);
 
 //COMPET
 Route::post('/compte/delete-compte', [CompteController::class, 'deleteCompte']);
@@ -55,6 +54,7 @@ Route::post('/reset_password/verify-compte', [ResetPasswordController::class, 'v
 Route::post('/publications/addpublications', [PublicationController::class, 'add']);
 Route::post('/publications/getPublications', [PublicationController::class, 'getPublications']);
 Route::post('/publications/search', [PublicationController::class, 'search']);
+
 
 
 //COMMENT
@@ -99,8 +99,8 @@ Route::post('/notifications/update-status', [NotificationController::class, 'upd
 
 // Route to send a message
 
-// Route::post('/chat', [ChatController::class, 'sendMessage']);
-// Route::delete('/chat/{id}', [ChatController::class, 'deleteMessage']);
-// Route::get('/chat/active', [ChatController::class, 'activeMessages']);
-// Route::get('/chat/{id_user}', [ChatController::class, 'selectMessages']);
-// Route::put('/chat/{id_user}', [ChatController::class, 'updateMessages']);
+Route::post('/chat/send_message', [ChatController::class, 'sendMessage']);
+Route::post('/chat/delete_message', [ChatController::class, 'deleteMessage']);
+Route::post('/chat/select_messages', [ChatController::class, 'selectMessages']);
+Route::get('/chat/active', [ChatController::class, 'activeMessages']);
+Route::post('/chat/update_status', [ChatController::class, 'updateMessages']);

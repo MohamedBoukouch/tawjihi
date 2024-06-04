@@ -35,7 +35,7 @@ class EcolevilleController extends Controller
 
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            $new_name = time() . '-' . $logo->getClientOriginalName();
+            $new_name = rand() . '.' . $logo->getClientOriginalExtension();
             $logo->move(public_path('/images/ecolevilleLogo'), $new_name);
             $logoPath = $new_name;
 

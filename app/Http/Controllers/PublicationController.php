@@ -112,7 +112,7 @@ class PublicationController extends Controller
     {
         $id_user = $request->input('id_user');
         $search_txt = $request->input('search_txt');
-
+    
         $publications = DB::table('publications')
             ->select('publications.*', DB::raw('CASE WHEN favorites.user_id IS NOT NULL THEN 1 ELSE 0 END AS favorite'), DB::raw('CASE WHEN likes.user_id IS NOT NULL THEN 1 ELSE 0 END AS liked'))
             ->leftJoin('favorites', function ($join) use ($id_user) {
@@ -123,12 +123,14 @@ class PublicationController extends Controller
                 $join->on('likes.publication_id', '=', 'publications.id')
                     ->where('likes.user_id', '=', $id_user);
             })
-            ->where('publications.localisation', 'like', "%$search_txt%")
-            ->orWhere('publications.type', 'like', "%$search_txt%")
-            ->orWhere('publications.titel', 'like', "%$search_txt%")
+            ->where(function ($query) use ($search_txt) {
+                $query->where('publications.localisation', 'like', "%$search_txt%")
+                      ->orWhere('publications.type', 'like', "%$search_txt%")
+                      ->orWhere('publications.titel', 'like', "%$search_txt%");
+            })
             ->orderByDesc('publications.id')
             ->get();
-
+    
         if ($publications->isNotEmpty()) {
             return response()->json(['status' => 'success', 'data' => $publications]);
         } else {

@@ -7,10 +7,25 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator; // Correct import
+use App\Mail\MailNotify;
 
 
 class ResetPasswordController extends Controller
 {
+    public function sendEmail($email,$body,$subject)
+    {
+        $toEmail = $email;
+        $message = $body;
+        $subject = $subject;
+    
+        try {
+            Mail::to($toEmail)->send(new MailNotify($message, $subject));
+            return "Success";
+        } catch (\Exception $e) {
+            return "error";
+        }
+    }
+    
     // Method to check email and send verify code
     public function checkEmail(Request $request)
     {
@@ -27,7 +42,7 @@ class ResetPasswordController extends Controller
             $user->verifycode = $verifycode;
             $user->save();
 
-            if ($this->sendEmail($email, "Verify Code Taleb", "Verify code $verifycode") == "Success") {
+            if ($this->sendEmail($email, "Verify code $verifycode","Verify Code Tawjihi") == "Success") {
                 return response()->json(['status' => 'success']);
             } else {
                 return response()->json(['status' => 'error', 'message' => 'Failed to send email']);
@@ -95,16 +110,5 @@ class ResetPasswordController extends Controller
     }
 
     // Placeholder for the sendEmail method
-    private function sendEmail($to, $subject, $message)
-    {
-        try {
-            Mail::raw($message, function($mail) use ($to, $subject) {
-                $mail->to($to)
-                     ->subject($subject);
-            });
-            return "Success";
-        } catch (\Exception $e) {
-            return "Failed";
-        }
-    }
+
 }

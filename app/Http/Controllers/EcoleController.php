@@ -38,9 +38,15 @@ class EcoleController extends Controller
 
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            $new_name = time() . '-' . $logo->getClientOriginalName();
+            $new_name = rand() . '.' . $logo->getClientOriginalExtension();
             $logo->move(public_path('/images/ecoleLogo'), $new_name);
             $logoPath = $new_name;
+
+        //     $new_name = rand() . '.' . $profile->getClientOriginalExtension();
+    
+        // // Move the image to the 'mem' directory
+        // $profile->move(public_path('/images/profile'), $new_name);
+
 
             $ecole = Ecole::create([
                 'name' => $request->name,

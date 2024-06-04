@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-// use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\User;
-use Mail;
 use App\Mail\MailNotify;
 
 class AuthentificationController extends Controller
@@ -17,35 +16,55 @@ class AuthentificationController extends Controller
     }
     
     // Login method
-    public function login(Request $request)
+    public function sendEmail($email,$body,$subject)
     {
-        // $request->validate([
-        //     'email' => 'required|email',
-        //     'password' => 'required'
-        // ]);
-
-        // $email = $request->input('email');
-        // $password = $request->input('password');
-
-        // $user = User::where('email', $email)->first();
-
-        // if ($user && Hash::check($password, $user->password)) {
-        //     return response()->json(['status' => 'success', 'data' => $user]);
-        // } else {
-        //     return response()->json(['status' => 'error', 'message' => 'Invalid credentials'], 401);
-        // }
-        $data = [
-            'subject' => 'cambo',
-            'body' => 'Hello'
-        ];
-        
+        $toEmail = $email;
+        $message = $body;
+        $subject = $subject;
+    
         try {
-            Mail::to('boukouchmohamed7@gmail.com')->send(new MailNotify($data));
-            return response()->json(['check ur email']);
-        } catch (Exception $e) {
-            return response()->json(['Sorry']);
+            Mail::to($toEmail)->send(new MailNotify($message, $subject));
+            return "Success";
+        } catch (\Exception $e) {
+            return "error";
         }
     }
+
+
+    public function login(Request $request){
+
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        $user = User::where('email', $email)->first();
+
+        if ($user && Hash::check($password, $user->password)) {
+            return response()->json(['status' => 'success', 'data' => $user]);
+        } else {
+            return response()->json(['status' => 'error', 'message' => 'Invalid credentials']);
+        }
+    }
+
+
+    //     $data = [
+    //         'subject' => 'cambo',
+    //         'body' => 'Hello'
+    //     ];
+        
+    //     try {
+    //         Mail::to('boukouchmohamed7@gmail.com')->send(new MailNotify($data));
+    //         return response()->json(['check ur email']);
+    //     } catch (Exception $e) {
+    //         return response()->json(['Sorry']);
+    //     }
+    // }
+
+
 
     // Signup method
     public function signup(Request $request)
@@ -74,7 +93,7 @@ class AuthentificationController extends Controller
 
         if ($user) {
             // Assuming you have a method to send email
-            if ($this->sendEmail($email, "Verify Code Taleb", "Verify code $verifycode") == "Success") {
+            if ($this->sendEmail($email, "Verify code $verifycode","Verification Code") == "Success") {
                 return response()->json(['status' => 'success', 'email' => 'Email sent successfully']);
             } else {
                 return response()->json(['status' => 'error', 'email' => 'Failed to send email'], 500);
@@ -84,7 +103,9 @@ class AuthentificationController extends Controller
         }
     }
 
+
     // Verification method
+
     public function verifyEmail(Request $request)
     {
         $request->validate([
@@ -104,32 +125,8 @@ class AuthentificationController extends Controller
         }
     }
 
-    // Placeholder for the sendEmail method
-    private function sendEmail($to, $subject, $message)
-    {
-        try {
-            Mail::raw($message, function($mail) use ($to, $subject) {
-                $mail->to($to)
-                     ->subject($subject);
-            });
-            return "Success";
-        } catch (\Exception $e) {
-            return "Failed";
-        }
-    }
 
-    // Method to send "Hello" email to the user
-    public function sendHelloEmail($email)
-    {
-        $subject = "Hello from Our Application";
-        $message = "Hello";
 
-        if ($this->sendEmail($email, $subject, $message) == "Success") {
-            return response()->json(['status' => 'success', 'message' => 'Hello email sent successfully']);
-        } else {
-            return response()->json(['status' => 'error', 'message' => 'Failed to send Hello email'], 500);
-        }
-    }
 
     public function editCompte(Request $request)
     {

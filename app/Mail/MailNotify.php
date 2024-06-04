@@ -6,30 +6,51 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Address;
 
 class MailNotify extends Mailable
 {
     use Queueable, SerializesModels;
-
-    private $data = [];
+    public $MailMssg;
+    public $subject;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($data)
+    public function __construct($message,$subject)
     {
-        $this->data = $data;
+        $this->MailMssg=$message;
+        $this->subject=$subject;
+
+
     }
 
     /**
-     * Build the message.
+     * Get the message envelope.
      */
-    public function build()
+    public function envelope(): Envelope
     {
-        return $this->from('boukouchmohamed62@gmail.com', 'test_1')
-                    ->subject($this->data['subject'])
-                    ->view('email.index')
-                    ->with('data', $this->data);
+        return new Envelope(
+            from: new Address('boukouchmohamed7@gmail.com','Tawjihi'),
+            replyTo:[
+                new Address('boukouchmohamed7@gmail.com','Tawjihi'),
+
+            ],
+
+            subject: $this->subject,
+        );
+    }
+
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
+    {
+        return new Content(
+            view: 'Email.index',
+        );
     }
 
     /**
